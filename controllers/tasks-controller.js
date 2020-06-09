@@ -39,10 +39,11 @@ class TasksController {
     };
     async see(req, res) {
 
-        render('task', res)
         Agenda.find().then(console.log)
+        render('task', res)
 
     }
+
     async put(req, res) {
         let body = req.body;
         Agenda.findOneAndUpdate({ _id: body.id }, {
@@ -55,10 +56,31 @@ class TasksController {
                     console.log(err);
                 } else {
                     console.log(result);
+                    render('update', res)
                 }
             }
         )
     };
+    async delete(req, res) {
+        let body = req.body;
+        Agenda.findOneAndDelete({ title: body.title },
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (result == null) {
+                        console.log('No hay tarea asignadas con ese nombre');
+                        render('delete', res)
+                    } else {
+                        console.log(result);
+                        console.log('Tarea borrada');
+                        render('delete', res)
+                    }
+                }
+            }
+        )
+    };
+
 }
 
 module.exports = new TasksController();
